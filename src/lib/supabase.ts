@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = 
+  import.meta.env.VITE_SUPABASE_URL || 
+  'https://xmizthhajiwywcgckzst.supabase.co';
+
+const supabaseAnonKey = 
+  import.meta.env.VITE_SUPABASE_ANON_KEY || 
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtaXp0aGhhaml3eXdjZ2NrenN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1MzA1NzMsImV4cCI6MjEwNzEwNjU3M30.Jr1-YM0hRM5AD_MxWPllK3jJGNFVLZ6b3cVoalnbU9Q';
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl && 
@@ -9,11 +14,7 @@ export const isSupabaseConfigured = Boolean(
   !supabaseUrl.includes('your-project-id')
 );
 
-// Fallback dummy client if credentials are not yet configured (prevents crash on load)
-export const supabase = createClient(
-  isSupabaseConfigured ? supabaseUrl : 'https://placeholder.supabase.co',
-  isSupabaseConfigured ? supabaseAnonKey : 'placeholder-anon-key'
-);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export interface Part {
   id: string;
