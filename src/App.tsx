@@ -13,6 +13,7 @@ import {
 } from '@/lib/supabase';
 import { OrderFilters } from '@/components/OrderFilters';
 import { SortableTh } from '@/components/SortableTh';
+import { BarcodeScannerModal } from '@/components/BarcodeScannerModal';
 
 interface CurrentUser {
   role: 'admin' | 'branch';
@@ -1382,35 +1383,12 @@ export default function App() {
       </main>
 
       {/* SCANNER MODAL */}
-      {showScannerModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-            <button onClick={() => setShowScannerModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
-            <div className="text-center mb-4">
-              <div className="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto text-blue-600 mb-2"><Camera className="w-6 h-6" /></div>
-              <h3 className="font-bold text-lg text-slate-800">Scanner Barcode Kamera</h3>
-              <p className="text-xs text-slate-500">Arahkan kamera ke Barcode Produk atau Rak Gudang</p>
-            </div>
-            <div className="relative bg-slate-900 rounded-xl h-52 flex flex-col items-center justify-center border-2 border-dashed border-blue-500 overflow-hidden mb-4">
-              <div className="absolute inset-x-8 top-12 bottom-12 border-2 border-emerald-400 rounded-lg animate-pulse pointer-events-none"></div>
-              <p className="text-white text-xs font-semibold z-10 bg-slate-800/80 px-3 py-1 rounded-full">Kamera Aktif / Siap Pindai</p>
-              <div className="text-slate-400 text-[10px] mt-2 z-10">Gunakan contoh di bawah untuk uji coba cepat:</div>
-              <div className="flex gap-2 mt-2 z-10">
-                <button onClick={() => handleProcessBarcodeScan('SOC-001')} className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] px-2.5 py-1 rounded font-bold">Test SOC-001</button>
-                <button onClick={() => handleProcessBarcodeScan('RACK-A-01')} className="bg-blue-600 hover:bg-blue-700 text-white text-[11px] px-2.5 py-1 rounded font-bold">Test RACK-A-01</button>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-600">Atau Ketik Kode Barcode / Part No / Rak:</label>
-              <div className="flex gap-2">
-                <input type="text" placeholder="Contoh: SOC-001 atau RACK-A-01" value={manualScanInput}
-                  onChange={e => setManualScanInput(e.target.value)} className="flex-1 p-2 border rounded-lg text-sm uppercase" />
-                <button onClick={() => handleProcessBarcodeScan(manualScanInput)} className="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-xs">Cari</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <BarcodeScannerModal
+        isOpen={showScannerModal}
+        onClose={() => setShowScannerModal(false)}
+        onScan={handleProcessBarcodeScan}
+        onTestScan={handleProcessBarcodeScan}
+      />
 
       {/* SCAN RESULT MODAL */}
       {scannedResultModal && (
