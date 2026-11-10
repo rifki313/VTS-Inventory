@@ -23,3 +23,5 @@ dist-ssr
 .env
 
 *.zip
+
+push_to_github.bat
