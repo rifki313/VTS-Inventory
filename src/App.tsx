@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import {
   supabase,
+  isSupabaseConfigured,
   type Part, type StockLog, type Order, type OrderItem, type ChatMessage,
   BRANCHES,
 } from '@/lib/supabase';
@@ -146,6 +147,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     (async () => {
       await Promise.all([loadParts(), loadOrders(), loadLogs(), loadChatMessages()]);
       setLoading(false);
@@ -665,6 +670,35 @@ export default function App() {
     });
     return result;
   }, [parts, searchQuery, selectedRackFilter, selectedCategoryFilter, stockFilter, sortBy, sortDir, showArchived]);
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
+          <div className="w-14 h-14 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">Konfigurasi Supabase Diperlukan</h2>
+          <p className="text-sm text-slate-600 mb-6">
+            Aplikasi belum dapat berjalan karena <strong>Environment Variables</strong> Supabase belum disetel pada pengaturan Vercel.
+          </p>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left text-xs font-mono text-slate-700 space-y-2 mb-6">
+            <div>
+              <span className="font-bold text-slate-900 block">1. VITE_SUPABASE_URL</span>
+              <span className="text-slate-500 break-all">https://xmizthhajiwywcgckzst.supabase.co</span>
+            </div>
+            <div className="pt-2 border-t border-slate-200">
+              <span className="font-bold text-slate-900 block">2. VITE_SUPABASE_ANON_KEY</span>
+              <span className="text-slate-500 break-all">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</span>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500">
+            Tambahkan kedua variabel di atas di <strong>Vercel &gt; Settings &gt; Environment Variables</strong>, lalu lakukan Redeploy.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // --- Login View ---
   if (!currentUser) {
